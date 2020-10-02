@@ -15,9 +15,6 @@ const config = {
 
 export const createUserProfileDocument = async (userAuth, additionalData) => {
   if (!userAuth) return;
-  // console.log(firestore.doc('users/128dfdfdfe'));
-
-  //console.log(firestore.doc('user/123jsdsdj23'));
 
   const userRef = firestore.doc(`users/${userAuth.uid}`);
 
@@ -39,6 +36,42 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
     }
   }
   return userRef;
+};
+
+export const addCollectionAndDocuments = async (
+  collectionKey,
+  objectsToAdd
+) => {
+  const collectionRef = firestore.collection(collectionKey);
+  const batch = firestore.batch();
+  objectsToAdd.forEach((obj) => {
+    // we want to get the document at an empty string,
+    // this will tell firebaset to give me a new document
+    // reference in this collection, and randomly
+    // generate an id for me
+    const documentRef = collectionRef.doc();
+    batch.set(documentRef, obj);
+  });
+
+  return await batch.commit();
+};
+
+export const convertCollectionsSnapshotToMap = (collections) => {
+  const transformedCollection = collections.docs.map((doc) => {
+    const { title, items } = doc.data();
+
+    return {
+      routeName: encodeURI(title.toLowerCase()),
+      id: doc.id,
+      title,
+      items,
+    };
+  });
+
+  return transformedCollection.reduce((accumalator, collection) => {
+    accumalator[collection.title.toLowerCase()] = collection;
+    return accumalator;
+  }, {});
 };
 
 firebase.initializeApp(config);
