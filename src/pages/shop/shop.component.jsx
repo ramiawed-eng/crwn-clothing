@@ -7,7 +7,7 @@ import {
   firestore,
 } from '../../firebase/firebase.util';
 
-import { fetchCollectionStartAsync } from '../../redux/shop/shop.action';
+import { fetchColllectionsStart } from '../../redux/shop/shop.action';
 import {
   selectIsCollectionFetching,
   selectIsCollectionsLoaded,
@@ -78,8 +78,8 @@ const CollectionPageWithSpinner = WithSpinner(CollectionPage);
 // asynchronous component with redux-thunk
 class ShopPage extends React.Component {
   componentDidMount() {
-    const { fetchCollectionStartAsync } = this.props;
-    fetchCollectionStartAsync();
+    const { fetchColllectionsStart } = this.props;
+    fetchColllectionsStart();
   }
 
   render() {
@@ -117,7 +117,7 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchCollectionStartAsync: () => dispatch(fetchCollectionStartAsync()),
+  fetchColllectionsStart: () => dispatch(fetchColllectionsStart()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ShopPage);

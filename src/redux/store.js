@@ -4,19 +4,28 @@ import { persistStore } from 'redux-persist';
 // redux-thunk library for async fetch
 import thunk from 'redux-thunk';
 
+// redux-sagas
+import createSagaMiddleware from 'redux-saga';
+import { fetchCollectionsStart } from './shop/shop.sagas';
+import rootSaga from './root-saga';
+
 // LOGGER LIBRARY
 // catches the action, it console logs it out
 // and then it moves it along
 import { logger } from 'redux-logger';
 import rootReducer from './root-reducer';
 
-const middlewares = [thunk];
+const createSagaMiddlewares = createSagaMiddleware();
+
+const middlewares = [createSagaMiddlewares];
 
 if (process.env.NODE_ENV === 'development') {
   middlewares.push(logger);
 }
 
 export const store = createStore(rootReducer, applyMiddleware(...middlewares));
+
+createSagaMiddlewares.run(rootSaga);
 
 export const persistor = persistStore(store);
 
